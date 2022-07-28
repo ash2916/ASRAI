@@ -1,19 +1,16 @@
 import React, { ReactNode } from "react";
 import {
   Box,
-  IconButton,
-  useBreakpointValue,
-  Stack,
-  Link,
   Heading,
   Text,
+  Stack,
   Container,
-  UnorderedList,
-  ListItem,
+  IconButton,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Slider from "react-slick";
+const AppFlowImg = require("../../../public/images/processFlow.drawio.png");
 
 const settings = {
   dots: true,
@@ -27,63 +24,30 @@ const settings = {
   slidesToScroll: 1,
 };
 
-const LinkItem = ({
-  href,
-  path,
-  children,
-}: {
-  href: string;
-  path: string;
-  children: ReactNode;
-}) => {
-  const active = path == href;
-  return (
-    <NextLink href={href}>
-      <Link p={2}>{children}</Link>
-    </NextLink>
-  );
-};
+function AppProcessCards() {
+  const [slider, setSlider] = React.useState<Slider | null>(null);
 
-export default function CaptionCarousel(props) {
-  const [slider, setSlider] = React.useState<Slider>(null);
-  // Breakpoints which changes the position of buttons as the screen size changes
   const top = useBreakpointValue({ base: "90%", md: "50%" });
-  const side = useBreakpointValue({ base: "30 %", md: "40px" });
-
-  const TechStackImg = `/images/TechStack.drawio.png`;
-  const IntroImg = `/images/undraw_Speech_to_text_re_8mtf.png`;
+  const side = useBreakpointValue({ base: "30%", md: "40px" });
 
   interface CardProps {
     title: string;
-    text?: string;
-    image: any;
-    linkText?: any;
-    href?: string;
+    text: string;
+    image: string;
   }
 
   const cards: Array<CardProps> = [
     {
-      title: "API Documentation",
+      title: "Client",
       text: "",
       image:
         "https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80",
-      linkText: "Go to Dashboard",
-      href: "/API_Dashboard",
     },
     {
-      title: "Subtitle Generator",
+      title: "Server",
       text: "",
       image:
-        "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1776&q=80",
-      linkText: "Check out the demo",
-      href: "./Demo",
-    },
-    {
-      title: "Our Stack",
-      text: "",
-      image: TechStackImg,
-      linkText: "",
-      href: ".",
+        "https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80",
     },
   ];
 
@@ -106,6 +70,7 @@ export default function CaptionCarousel(props) {
         type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
       />
+      {/* Left Icon */}
       <IconButton
         aria-label="left-arrow"
         variant="ghost"
@@ -135,15 +100,11 @@ export default function CaptionCarousel(props) {
           <Box
             key={index}
             height={"6xl"}
-            // position="relative"
-            // backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
-            backgroundImage={card.image}
-            bgSize="lg"
+            backgroundImage={`url(${card.image})`}
           >
-            {/* <img src={card.image} /> */}
-            {/* Customize the caption */}
+            {/* This is the block you need to change, to customize the caption */}
             <Container size="container.lg" height="600px" position="relative">
               <Stack
                 spacing={6}
@@ -159,9 +120,6 @@ export default function CaptionCarousel(props) {
                 <Text fontSize={{ base: "md", lg: "lg" }} color="GrayText">
                   {card.text}
                 </Text>
-                <LinkItem href={card.href} path={props}>
-                  {card.linkText}
-                </LinkItem>
               </Stack>
             </Container>
           </Box>
@@ -170,3 +128,5 @@ export default function CaptionCarousel(props) {
     </Box>
   );
 }
+
+export default React.forwardRef(AppProcessCards);

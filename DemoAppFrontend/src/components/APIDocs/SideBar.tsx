@@ -4,7 +4,6 @@ import {
   Box,
   CloseButton,
   Flex,
-  Icon,
   useColorModeValue,
   Drawer,
   DrawerContent,
@@ -14,9 +13,8 @@ import {
   FlexProps,
   Input,
 } from "@chakra-ui/react";
-import { FiCompass, FiArrowDownLeft, FiKey } from "react-icons/fi";
+import { FiCompass, FiArrowDownLeft } from "react-icons/fi";
 import { IconType } from "react-icons";
-import { Link, Outlet } from "react-router-dom";
 import ActionButton from "../Fixed/ActionButton";
 import axios from "axios";
 
@@ -31,14 +29,11 @@ const LinkItems: Array<LinkItemProps> = [
     key: 1,
     name: "Core Resources",
     icon: FiCompass,
-    path: "./CoreResources",
+    path: "./",
   },
-  { key: 2, name: "Plugin", icon: FiKey, path: "./Plugin" },
 ];
 
 export default function SideBar({ children }: { children?: ReactNode }) {
-  // const [mobile, setMobile] = useState(false);
-  // const activeMenu = true;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -67,50 +62,14 @@ export default function SideBar({ children }: { children?: ReactNode }) {
   );
 }
 
-interface SidebarProps extends BoxProps {
-  onClose: () => void;
-}
-
-interface NavItemProps extends FlexProps {
-  icon: IconType;
-  children: ReactText;
-  href: string;
-}
-const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
-  return (
-    <Link to={href} style={{ textDecoration: "none" }}>
-      <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: useColorModeValue("gray", "orange.200"),
-          color: "white",
-        }}
-        {...rest}
-      >
-        {icon && (
-          <Icon
-            mr="4"
-            fontSize="16"
-            _groupHover={{
-              color: "white",
-            }}
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
-    </Link>
-  );
-};
 const GetInfoSection = () => {
-  const [name, setName] = useState<any | null>(null);
-  const handleChange = (event) => setName(event.target.value);
+  const [name, setName] = useState<string>(null);
+  const handleChange = (event) => {
+    event.preventDefault();
+    setName(event.target.value);
+  };
   const [submitted, setSubmitted] = useState(false);
+  const [ApiKey, showApiKey] = useState();
 
   const FormData = require("form-data");
   const bodyFormData = new FormData();
@@ -118,18 +77,15 @@ const GetInfoSection = () => {
   const handleSubmittedInfo = async () => {
     const res = await axios({
       method: "post",
-      url: "https://glitchrooms.space/asr_api.php/",
+      url: "http://127.0.0.1:5000/get_api_key",
       data: bodyFormData,
       headers: {
         "Access-Control-Allow-Origin": "*/*",
         "Content-Type": "multipart/form-data",
         mode: "no-cors",
-        // "Content-Type": "application/json",
-        // withCredentials: true,
-        // Authorization: key,
       },
     });
-    console.log(res);
+    showApiKey(res.data.api_key);
     setName("");
     setSubmitted(true);
   };
@@ -149,20 +105,22 @@ const GetInfoSection = () => {
       <ActionButton m="5px" btnText="Submit" onClick={handleSubmittedInfo} />
       {submitted ? (
         <>
-          <Text></Text>
+          <Text />
           <Text as="b" m="5px">
-            Your API key is:{" "}
+            Your API key is:
           </Text>
-          <Text m="5px"> here</Text>
-          <Text as="b" m="5px">
-            Your secret key is:{" "}
+          <Text m="5px" ml="5px">
+            {ApiKey}
           </Text>
-          <Text m="5px"> here</Text>
         </>
       ) : null}
     </>
   );
 };
+
+interface SidebarProps extends BoxProps {
+  onClose: () => void;
+}
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
@@ -185,16 +143,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             onClick={onClose}
           />
         </Flex>
-        <nav>
-          {LinkItems.map((link) => (
-            <NavItem key={link.key} icon={link.icon} href={link.path}>
-              {link.name}
-            </NavItem>
-          ))}
-        </nav>
         <GetInfoSection />
       </Box>
-      <Outlet />
     </>
   );
 };

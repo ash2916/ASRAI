@@ -5,7 +5,7 @@ import Navbar from "../Fixed/navbar";
 import ScrollToTop from "../Fixed/ScrollToTop";
 
 const Main = ({ children, router }) => {
-  const headerImg = `/images/nova.png`;
+  const headerImg = `/images/ASR-AI.png`;
   return (
     <Box as="main" pb={8}>
       <Head>

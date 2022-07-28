@@ -18,7 +18,7 @@ const LogoBox = styled.span`
 `;
 
 const Logo = () => {
-  const footPrintImg = `/images/nova.png`;
+  const footPrintImg = `/images/ASR-AI.png`;
 
   return (
     <Link href="/">
