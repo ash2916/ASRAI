@@ -1,19 +1,18 @@
 import React, { ReactNode } from "react";
 import {
   Box,
-  Flex,
+  IconButton,
+  useBreakpointValue,
+  Stack,
+  Link,
   Heading,
   Text,
-  Stack,
   Container,
-  IconButton,
-  useColorModeValue,
-  useBreakpointValue,
+  Flex,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
-// And react-slick as our Carousel Lib
 import Slider from "react-slick";
-const AppFlowImg = require("../../../public/images/processFlow.drawio.png");
 
 const settings = {
   dots: true,
@@ -27,39 +26,73 @@ const settings = {
   slidesToScroll: 1,
 };
 
-function AppProcessCards() {
-  const [slider, setSlider] = React.useState<Slider | null>(null);
+const LinkItem = ({
+  href,
+  path,
+  children,
+}: {
+  href: string;
+  path: string;
+  children: ReactNode;
+}) => {
+  const active = path == href;
+  return (
+    <NextLink href={href}>
+      <Link p={2}>{children}</Link>
+    </NextLink>
+  );
+};
 
+export default function CaptionCarousel(props) {
+  const [slider, setSlider] = React.useState<Slider>(null);
+  // Breakpoints which changes the position of buttons as the screen size changes
   const top = useBreakpointValue({ base: "90%", md: "50%" });
   const side = useBreakpointValue({ base: "30%", md: "40px" });
 
+  const TechStackImg = `/images/TechStack.drawio.png`;
   interface CardProps {
     title: string;
-    text: string;
-    image: string;
+    text?: string;
+    image: any;
+    linkText?: any;
+    href?: string;
   }
 
   const cards: Array<CardProps> = [
     {
-      title: "Client",
+      title: "API Documentation",
       text: "",
       image:
         "https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80",
+      linkText: "Go to Dashboard",
+      href: "/API_Dashboard",
     },
     {
-      title: "Server",
+      title: "Subtitle Generator",
       text: "",
       image:
-        "https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80",
+        "https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=",
+      linkText: "Check out the demo",
+      href: "./Demo",
+    },
+    {
+      title: "Our Stack",
+      text: "",
+      image: TechStackImg,
+      linkText: "",
+      href: ".",
     },
   ];
 
   return (
     <Box
-      position={"relative"}
-      height={"600px"}
-      width={"full"}
-      overflow={"hidden"}
+      position="relative"
+      h="auto"
+      w="100%"
+      maxW="100%"
+      overflow="hidden"
+      minH="100vh"
+      marginBottom="0px"
     >
       {/* CSS files for react-slick */}
       <link
@@ -73,7 +106,6 @@ function AppProcessCards() {
         type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
       />
-      {/* Left Icon */}
       <IconButton
         aria-label="left-arrow"
         variant="ghost"
@@ -86,7 +118,6 @@ function AppProcessCards() {
       >
         <BiLeftArrowAlt size="40px" />
       </IconButton>
-      {/* Right Icon */}
       <IconButton
         aria-label="right-arrow"
         variant="ghost"
@@ -99,19 +130,17 @@ function AppProcessCards() {
       >
         <BiRightArrowAlt size="40px" />
       </IconButton>
-      {/* Slider */}
       <Slider {...settings} ref={(slider) => setSlider(slider)}>
         {cards.map((card, index) => (
           <Box
             key={index}
-            height={"6xl"}
-            // position="relative"
-            // backgroundPosition="center"
             backgroundRepeat="no-repeat"
-            backgroundSize="cover"
-            backgroundImage={`url(${card.image})`}
+            bgSize="cover"
+            backgroundImage={card.image}
+            overflow="hidden"
+            height={"2xl"}
           >
-            {/* This is the block you need to change, to customize the caption */}
+            {/* Customize the caption */}
             <Container size="container.lg" height="600px" position="relative">
               <Stack
                 spacing={6}
@@ -127,6 +156,9 @@ function AppProcessCards() {
                 <Text fontSize={{ base: "md", lg: "lg" }} color="GrayText">
                   {card.text}
                 </Text>
+                <LinkItem href={card.href} path={props}>
+                  {card.linkText}
+                </LinkItem>
               </Stack>
             </Container>
           </Box>
@@ -135,5 +167,3 @@ function AppProcessCards() {
     </Box>
   );
 }
-
-export default React.forwardRef(AppProcessCards);

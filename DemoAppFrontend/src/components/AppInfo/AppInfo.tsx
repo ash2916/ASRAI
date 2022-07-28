@@ -1,6 +1,5 @@
 import React, { forwardRef } from "react";
 import AppProcessCards from "./AppProcessCards";
-import Slider from "react-slick";
 
 const AppInfo = forwardRef((props, ref) => {
   return (

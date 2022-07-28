@@ -25,7 +25,7 @@ import ModelSelect from "react-select";
 
 export default function Test() {
   const SEPARATOR = " · ";
-  const CryptoJS = require("crypto-js");
+  // const CryptoJS = require("crypto-js");
   const modelOptions = [
     {
       value: "quartznet",
@@ -39,12 +39,11 @@ export default function Test() {
 
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState<any | null>(null);
-  const [value, setValue] = useState();
   const [options, showOptions] = useState(true);
   const [model, setModel] = useState();
-  const [inputFileType, setInputFileType] = useState<any | null>(null);
+  const [inputFileType, setInputFileType] = useState<string>(null);
   const [uploadedFile, handleUploadedFile] = useState<any | null>();
-  const [transcript, showTranscript] = useState<any | null>(null);
+  const [transcript, showTranscript] = useState<string>(null);
   const [latencyNumber, showLatencyNumber] = useState<number>(null);
   const [volume, setVolume] = useState<number>(0);
 
@@ -60,13 +59,12 @@ export default function Test() {
     setLoading(true);
     const res = await axios({
       method: "post",
-      url: "https://asr-ai-api.herokuapp.com/transcribe_audio",
+      url: "http://127.0.0.1:5000/transcribe_file",
       data: bodyFormData,
       headers: {
         "Access-Control-Allow-Origin": "*/*",
         "Content-Type": "multipart/form-data",
         mode: "no-cors",
-        // "Content-Type": "application/json",
         // withCredentials: true,
         // Authorization: key,
       },
@@ -100,54 +98,21 @@ export default function Test() {
   const handleSearchCallback = (videoId) => {
     setUrl("https://www.youtube.com/embed/" + videoId);
     handleUploadedFile("https://www.youtube.com/embed/" + videoId);
-
-    // const encryptedSearchUrl = CryptoJS.AES.encrypt(
-    //   JSON.stringify("https://www.youtube.com/embed/" + videoId),
-    //   "my-secret-key@123"
-    // ).toString();
-
-    // console.log("decrypted ");
-    // console.log(
-    //   JSON.parse(
-    //     CryptoJS.AES.decrypt(uploadedFile, "my-secret-key@123").toString(
-    //       CryptoJS.enc.Utf8
-    //     )
-    //   )
-    // );
     setInputFileType("y_video");
   };
 
   const handleUploadCallback = (fileUrl) => {
     setUrl(fileUrl);
-    // console.log("object url " + URL.revokeObjectURL(fileUrl));
   };
 
   const handleUrlCallback = (watchUrl) => {
     setUrl(watchUrl);
-    // const encryptedUrl = CryptoJS.AES.encrypt(
-    //   JSON.stringify(watchUrl),
-    //   "my-secret-key@123"
-    // ).toString();
-    // handleUploadedFile(encryptedUrl);
     handleUploadedFile(watchUrl);
     setInputFileType("y_video");
   };
 
   const handleUploadTypeCallback = (blob) => {
     handleUploadedFile(blob);
-    // const object = CryptoJS.AES.encrypt(
-    //   JSON.stringify(blob),
-    //   "my-secret-key@123"
-    // ).toString();
-    // handleUploadedFile(object);
-    // const decryptedObject = JSON.parse(
-    //   CryptoJS.AES.decrypt(uploadedFile, "my-secret-key@123").toString(
-    //     CryptoJS.enc.Utf8
-    //   )
-    // );
-    // console.log("decrypted ");
-    // console.log(decryptedObject);
-
     if (blob.type == "audio/wav") {
       setInputFileType("a_upload");
     } else if (blob.type == "video/mp4") {
@@ -157,25 +122,8 @@ export default function Test() {
     }
   };
 
-  const handleInputChange = (event) => {
-    event.preventDefault();
-    const inputValue = event.target.value;
-    setValue(inputValue);
-  };
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-  // }, []);
-
   return (
     <>
-      {/* {loading ? (
-        <Box pos="absolute" ml="50%" mr="50%" mt="100px">
-          <ClimbingBoxLoader loading={loading} />
-        </Box>
-      ) : ( */}
       {options ? (
         <>
           <Flex>
